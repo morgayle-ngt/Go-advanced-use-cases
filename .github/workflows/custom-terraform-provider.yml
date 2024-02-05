@@ -1,0 +1,42 @@
+name: Release Custom Terraform Provider
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: '^1.16'
+
+    - name: Build and Install Terraform Provider
+      run: |
+        go build -o terraform-provider-myresource
+        mkdir -p ~/.terraform.d/plugins/hashicorp.com/edu/myresource/1.0.0/linux_amd64
+        mv terraform-provider-myresource ~/.terraform.d/plugins/hashicorp.com/edu/myresource/1.0.0/linux_amd64
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./terraform-provider-myresource
+        asset_name: terraform-provider-myresource
+        asset_content_type: application/octet-stream
