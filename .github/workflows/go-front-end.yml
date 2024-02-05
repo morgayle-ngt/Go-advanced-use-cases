@@ -1,0 +1,31 @@
+name: Deploy Go Web Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: '^1.16'
+
+    - name: Build Go Web Server
+      run: go build -o webserver ./cmd/webserver
+
+    - name: Build Docker Image for Go Web Server
+      run: docker build . -t go-web-server:${{ github.sha }}
+
+    - name: Push Docker Image to Registry
+      run: |
+        echo ${{ secrets.REGISTRY_PASSWORD }} | docker login ${{ secrets.REGISTRY_URL }} -u ${{ secrets.REGISTRY_USERNAME }} --password-stdin
+        docker push go-web-server:${{ github.sha }}
+
+    - name: Deploy Go Web Server
+      run: echo "Deploy the Go web server to your environment"
