@@ -1,0 +1,39 @@
+---
+name: golangci-lint
+on:
+  push:
+    paths:
+      - "go.sum"
+      - "go.mod"
+      - "**.go"
+      - "scripts/errcheck_excludes.txt"
+      - ".github/workflows/golangci-lint.yml"
+      - ".golangci.yml"
+  pull_request:
+
+permissions:  # added using https://github.com/step-security/secure-repo
+  contents: read
+  
+name: 'My Custom Go Action'
+description: 'Performs an action using a Go program'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.some_input }}
+inputs:
+  some_input:
+    description: 'An input to pass to your Go program'
+    required: true
+    default: 'default value'
+jobs:
+  my_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Run my custom Go action
+        uses: your-github-username/your-github-action-repo@main
+        with:
+          some_input: 'Hello, world!'
