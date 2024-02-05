@@ -1,4 +1,4 @@
-# Go Streaming Service CI/CD with GitHub Actions
+# Go use cases for enterprise, cloud, streaming, and research projects
 
 This project demonstrates the use of GitHub Actions to automate Continuous Integration and Continuous Deployment (CI/CD) workflows for a Go-based project. The workflows cover a range of use cases from testing and building Go applications to deploying them on Kubernetes and managing infrastructure with Terraform.
 
