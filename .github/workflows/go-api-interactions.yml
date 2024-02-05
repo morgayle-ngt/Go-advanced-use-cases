@@ -1,0 +1,15 @@
+name: Interact with Go API
+
+on: [push]
+
+jobs:
+  api-interaction:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: '^1.15'
+    - name: Interact with API
+      run: go run scripts/api_interaction.go
